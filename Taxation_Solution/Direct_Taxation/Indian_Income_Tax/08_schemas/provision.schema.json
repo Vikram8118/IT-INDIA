@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local/india-tax-kb/provision.schema.json",
+  "title": "LegalProvision",
+  "description": "One atomic provision of law, rule, form field or notified position. Draft v0.2.",
+  "type": "object",
+  "required": [
+    "provision_id",
+    "jurisdiction",
+    "instrument_id",
+    "regime",
+    "section_number",
+    "citation",
+    "effective_from",
+    "status",
+    "source_id",
+    "verification",
+    "last_verified_on",
+    "next_review_due"
+  ],
+  "properties": {
+    "provision_id": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}-[A-Z0-9]+(-[A-Za-z0-9.()]+)+$",
+      "examples": ["IN-ITA25-393-1", "IN-ITA61-194C-2", "IN-ITR26-R12"]
+    },
+    "jurisdiction": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$",
+      "description": "ISO 3166-1 alpha-2 country code. IN for India."
+    },
+    "instrument_id": { "type": "string" },
+    "parent_provision_id": { "type": ["string", "null"] },
+    "regime": {
+      "type": "string",
+      "enum": [
+        "IT_ACT_2025",
+        "IT_ACT_1961",
+        "IT_RULES_2026",
+        "IT_RULES_1962",
+        "CBDT_CIRCULAR",
+        "CBDT_NOTIFICATION",
+        "FORM",
+        "ALLIED",
+        "TREATY",
+        "GUIDANCE"
+      ]
+    },
+    "section_number": {
+      "type": "string",
+      "description": "Official number exactly as printed in the instrument. Stored as text."
+    },
+    "citation": { "type": "string" },
+    "heading": { "type": ["string", "null"] },
+    "text_path": { "type": "string" },
+    "effective_from": { "type": "string", "format": "date" },
+    "effective_to": { "type": ["string", "null"], "format": "date" },
+    "status": {
+      "type": "string",
+      "enum": ["in_force", "omitted", "substituted", "not_yet_effective", "superseded", "unverified"]
+    },
+    "source_id": {
+      "type": "string",
+      "description": "Must match a row in 01_sources/source_register.csv with allowlisted=YES and owner_decision=CONFIRMED."
+    },
+    "verification": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["proposed", "confirmed_by_reviewer", "validated_by_CA"]
+        },
+        "reviewer": { "type": ["string", "null"] },
+        "reviewed_on": { "type": ["string", "null"], "format": "date" }
+      }
+    },
+    "last_verified_on": { "type": "string", "format": "date" },
+    "next_review_due": { "type": "string", "format": "date" },
+    "ambiguity_flag": {
+      "type": "string",
+      "enum": ["none", "interpretive", "conflicting_sources", "awaiting_case_law"],
+      "default": "none"
+    },
+    "crosswalk": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "object",
+        "required": ["provision_id", "equivalence", "verified_by", "verified_on"],
+        "properties": {
+          "provision_id": { "type": "string" },
+          "equivalence": {
+            "type": "string",
+            "enum": ["identical", "changed", "partial", "no_equivalent", "split", "merged"]
+          },
+          "overlap_scope": { "type": ["string", "null"] },
+          "difference_note": { "type": ["string", "null"] },
+          "verified_by": { "type": "string" },
+          "verified_on": { "type": "string", "format": "date" }
+        }
+      }
+    },
+    "referenced_provision_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

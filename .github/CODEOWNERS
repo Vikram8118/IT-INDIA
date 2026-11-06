@@ -1,0 +1,7 @@
+# Review ownership. Changes to the live content need CA approval.
+# Add the CA reviewer handle here when the CA joins.
+
+/Taxation_Solution/Direct_Taxation/Indian_Income_Tax/live/            @Vikram8118
+/Taxation_Solution/Direct_Taxation/Indian_Income_Tax/raw/             @Vikram8118
+/Taxation_Solution/Direct_Taxation/Indian_Income_Tax/proposed/        @Vikram8118
+/Taxation_Solution/Direct_Taxation/Indian_Income_Tax/00_governance/    @Vikram8118

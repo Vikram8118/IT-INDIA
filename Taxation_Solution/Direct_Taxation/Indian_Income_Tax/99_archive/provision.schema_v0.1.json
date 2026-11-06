@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local/india-tax-kb/provision.schema.json",
+  "title": "LegalProvision",
+  "description": "One atomic provision of law, rule, form field or notified position. Draft v0.1.",
+  "type": "object",
+  "required": [
+    "provision_id",
+    "instrument_id",
+    "regime",
+    "citation",
+    "effective_from",
+    "status",
+    "source_id",
+    "verification"
+  ],
+  "properties": {
+    "provision_id": {
+      "type": "string",
+      "pattern": "^[A-Z0-9]+(-[A-Za-z0-9.()]+)+$",
+      "examples": ["ITA25-393-1", "ITA61-194C-2", "ITR26-R12"]
+    },
+    "instrument_id": { "type": "string" },
+    "parent_provision_id": { "type": ["string", "null"] },
+    "regime": {
+      "type": "string",
+      "enum": [
+        "IT_ACT_2025",
+        "IT_ACT_1961",
+        "IT_RULES_2026",
+        "IT_RULES_1962",
+        "CBDT_CIRCULAR",
+        "CBDT_NOTIFICATION",
+        "FORM",
+        "ALLIED",
+        "TREATY",
+        "GUIDANCE"
+      ]
+    },
+    "citation": {
+      "type": "string",
+      "description": "Official reference as published, for example 'Section 393(1), Income-tax Act, 2025'."
+    },
+    "heading": { "type": ["string", "null"] },
+    "text_path": { "type": "string", "description": "Relative path to the markdown text in the knowledge base." },
+    "effective_from": { "type": "string", "format": "date" },
+    "effective_to": { "type": ["string", "null"], "format": "date" },
+    "status": {
+      "type": "string",
+      "enum": ["in_force", "omitted", "substituted", "not_yet_effective", "superseded", "unverified"]
+    },
+    "source_id": {
+      "type": "string",
+      "description": "Must match a CONFIRMED row in 01_sources/source_register.csv."
+    },
+    "verification": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["proposed", "confirmed_by_reviewer", "validated_by_CA"]
+        },
+        "reviewer": { "type": ["string", "null"] },
+        "reviewed_on": { "type": ["string", "null"], "format": "date" }
+      }
+    },
+    "crosswalk_1961": {
+      "type": ["array", "null"],
+      "description": "Equivalent provisions under the other regime, with equivalence type.",
+      "items": {
+        "type": "object",
+        "required": ["provision_id", "equivalence"],
+        "properties": {
+          "provision_id": { "type": "string" },
+          "equivalence": {
+            "type": "string",
+            "enum": ["identical", "changed", "partial", "no_equivalent"]
+          },
+          "difference_note": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "referenced_provision_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Cross-references inside the text, used for retrieval and for checking citations."
+    }
+  },
+  "additionalProperties": false
+}
